@@ -689,6 +689,7 @@ export default class GameManager {
     }
     sendEndGame() {
         if (this.trackerInitialized && !this.gameCompleted) {
+            this.day=7.0;
             this.sendGameProgress();
 
             this.gameCompleted = true;

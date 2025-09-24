@@ -115,16 +115,17 @@ export default class GameManager {
         this.computer = this.currentScene.scene.get(computerSceneName);
         this.computer.scene.sleep();
 
-        // this.startGame(this.userInfo)
+        this.TOTAL_DAYS = 7.0;
+        
+        //this.startGame(this.userInfo)
         // this.changeScene("Scene1Lunch1", {});
-        // this.changeScene("Scene1Bedroom1", {});
-        // this.changeScene("Scene2Bedroom", {});
-        // this.changeScene("Scene3Bedroom", {});
-        // this.changeScene("Scene4Garage", {});
-        // this.changeScene("Scene6Livingroom", {});
-        this.changeScene("Scene6EndingRouteA", {});
-        // this.changeScene("Scene7Bedroom", {});
-
+        //this.day=1;this.changeScene("Scene1Bedroom1", {});
+        //this.day=2;this.changeScene("Scene2Bedroom", {});
+        //this.day=3;this.changeScene("Scene3Bedroom", {});
+        //this.day=4;this.changeScene("Scene4Garage", {});
+        //this.day=5;this.changeScene("Scene6Livingroom", {});
+        this.day=6;this.changeScene("Scene6EndingRouteA", {});
+        //this.day=7;this.changeScene("Scene7Bedroom", {});
     }
 
     startTitleScene() {

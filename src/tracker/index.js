@@ -1,7 +1,7 @@
 import Tracker from './tracker.js'
 import LRS from './lrs.js';
 import { AccountActor } from './statement/actor.js';
-import { OAuth2 } from './authentication.js';
+import { OAuth2, OAuth0 } from './authentication.js';
 import ms from './lib/ms.js'
 
 export function generateTrackerFromURL() {
@@ -17,7 +17,7 @@ export function generateTrackerFromURL() {
 
     let actorHomepage = null;
     let actorUsername = null;
-
+    let authToken = null;
     let authConfig = {}
 
     if (urlParams.size > 0) {
@@ -64,18 +64,29 @@ export function generateTrackerFromURL() {
         else if (ssoUsername) {
             authConfig.password = ssoUsername;
         }
-    }
-
-    return new Tracker(
-        new LRS({
-            baseUrl: resultUri,
-            authScheme: new OAuth2(authConfig),
-            serializer: (statement, version) => statement.serializeToXApi(version),
-            backup: {
-                endpoint: backupUri,
-                serializer: (statement, version) => JSON.stringify(statement.serializeToXApi(version))
+        authToken = urlParams.get('auth_token');
+        let authScheme = null;
+        if(authConfig.ssoTokenEndpoint) {
+            authScheme = new OAuth2(authConfig);
+        } else if(authConfig.username && authConfig.password) {
+            authScheme = new BasicAuthentication(authConfig.username, authConfig.password);
+        } else {
+            if(authToken) {
+                authScheme = new OAuth0(authToken);
             }
-        }),
-        new AccountActor(actorHomepage, actorUsername)
-    )
+        }
+        return new Tracker(
+            new LRS({
+                baseUrl: resultUri,
+                authScheme: authScheme,
+                serializer: (statement, version) => statement.serializeToXApi(version),
+                backup: {
+                    endpoint: backupUri,
+                    serializer: (statement, version) => JSON.stringify(statement.serializeToXApi(version))
+                }
+            }),
+            new AccountActor(actorHomepage, actorUsername)
+        )
+    }
+    
 }

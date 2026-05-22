@@ -6,6 +6,22 @@ class Authentication {
     async logout() { }
 }
 
+export class OAuth0 extends Authentication {
+    constructor(jwtToken) {
+        super()
+        this.credentials = jwtToken
+        this.auth = jwtToken
+    }
+
+    async initAuth() {
+        return this.auth
+    }
+
+    async refreshAuth() {
+        return this.auth
+    }
+}
+
 export class BasicAuthentication extends Authentication {
     constructor(username, password) {
         super()

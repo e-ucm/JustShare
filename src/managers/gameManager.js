@@ -603,8 +603,9 @@ export default class GameManager {
 
         try {
             this.tracker = generateTrackerFromURL();
-        }
-        catch {
+        } catch (error) {
+            console.debug("Error initializing tracker from URL parameters:");
+            console.debug("Using backup tracker with hardcoded LRS credentials. This is not recommended for production environments.");
             this.tracker = new Tracker(
                 new LRS({
                     baseUrl: "https://cloud.scorm.com/lrs/YQFKDDG1H6/sandbox/",

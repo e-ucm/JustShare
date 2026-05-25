@@ -66,7 +66,7 @@ export function generateTrackerFromURL() {
         }
         authToken = urlParams.get('auth_token');
         let authScheme = null;
-        if(authConfig.ssoTokenEndpoint) {
+        if(authConfig.tokenEndpoint != null) {
             authScheme = new OAuth2(authConfig);
         } else if(authConfig.username && authConfig.password) {
             authScheme = new BasicAuthentication(authConfig.username, authConfig.password);

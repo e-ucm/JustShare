@@ -605,6 +605,9 @@ export default class GameManager {
             this.tracker = generateTrackerFromURL();
         } catch (error) {
             console.debug("Error initializing tracker from URL parameters:");
+        }
+
+        if (!this.tracker) {
             console.debug("Using backup tracker with hardcoded LRS credentials. This is not recommended for production environments.");
             this.tracker = new Tracker(
                 new LRS({

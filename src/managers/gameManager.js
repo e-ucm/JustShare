@@ -600,21 +600,23 @@ export default class GameManager {
         this.tracker.trackerSettings.generateSettingsFromURLParams=true;
 
         await this.tracker.login();
-        this.tracker.start();
 
-        if (!this.tracker) {
+        if (!this.tracker.isLoggedIn()) {
             console.debug("Using backup tracker with hardcoded LRS credentials. This is not recommended for production environments.");
-            this.tracker = new Tracker(
-                new LRS({
-                    baseUrl: "https://cloud.scorm.com/lrs/YQFKDDG1H6/sandbox/",
-                    authScheme: new BasicAuthentication("oMsoz51hM_OQbNNR3Nk", "LfWapsOhe1V-ryV2C6o"),
-                    serializer: (statement, version) => statement.serializeToXApi(version)
-                }),
-                new AccountActor("http://example.com", "TestActor")
-            );
+            this.tracker.trackerSettings.generateSettingsFromURLParams=false;
+            this.tracker.trackerSettings.batch_endpoint="https://cloud.scorm.com/lrs/YQFKDDG1H6/sandbox/";
+            this.tracker.trackerSettings.actor_name = "TestActor";
+            this.tracker.trackerSettings.platform = "http://example.com";
+            this.tracker.trackerSettings.oauth_type="oauth1";
+            this.tracker.trackerSettings.oauth1={
+                username:"oMsoz51hM_OQbNNR3Nk",
+                password:"LfWapsOhe1V-ryV2C6o"
+            };
+            await this.tracker.login();
         }
-
-        this.trackerInitialized = this.tracker !== null;
+        
+        this.tracker.start();
+        this.trackerInitialized = this.tracker !== null && this.tracker.Started !== false;
     }
 
     sendEnterScene(scene, params) {
@@ -760,14 +762,14 @@ export default class GameManager {
 
     sendNotificationReceived(chat) {
         if (this.trackerInitialized && !this.gameCompleted) {
-            let evt = this.tracker.completable("NotificationReceived", this.tracker.COMPLETABLETYPE.QUEST).initialized();
+            let evt = this.tracker.completable(`Notification-${chat}`, this.tracker.COMPLETABLETYPE.QUEST).initialized();
             evt.withResultExtension("Chat", chat);
             evt.send();
         }
     }
     sendNotificationsCleared(chat) {
         if (this.trackerInitialized && !this.gameCompleted) {
-            let evt = this.tracker.completable("NotificationReceived", this.tracker.COMPLETABLETYPE.QUEST).completed(1, true, true);
+            let evt = this.tracker.completable(`Notification-${chat}`, this.tracker.COMPLETABLETYPE.QUEST).completed(1, true, true);
             evt.withResultExtension("Chat", chat);
             evt.send();
         }

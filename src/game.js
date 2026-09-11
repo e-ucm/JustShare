@@ -32,16 +32,15 @@ import Scene5Bedroom from "./scenes/gameLoop/scene5/scene5Bedroom.js";
 // Escena 6
 import Scene6Livingroom from "./scenes/gameLoop/scene6/scene6Livingroom.js";
 import Scene6Bedroom from "./scenes/gameLoop/scene6/scene6Bedroom.js";
-    import Scene6BedroomRouteA1 from "./scenes/gameLoop/scene6/routeA/scene6BedroomRouteA1.js";
-    import scene6BedroomRouteA2 from "./scenes/gameLoop/scene6/routeA/scene6BedroomRouteA2.js";
-    import Scene6LunchRouteA from "./scenes/gameLoop/scene6/routeA/scene6LunchRouteA.js";
-    import Scene6PortalRouteA from "./scenes/gameLoop/scene6/routeA/scene6PortalRouteA.js";
-    import Scene6EndingRouteA from "./scenes/gameLoop/scene6/routeA/scene6EndingRouteA.js";
-
-    import Scene6LunchRouteB from "./scenes/gameLoop/scene6/routeB/scene6LunchRouteB.js";
-    import Scene6BedroomRouteB from "./scenes/gameLoop/scene6/routeB/scene6BedroomRouteB.js";
-    import Scene6PoliceStationRouteB from "./scenes/gameLoop/scene6/routeB/scene6PoliceStationRouteB.js";
-    import Scene6EndingRouteB from "./scenes/gameLoop/scene6/routeB/scene6EndingRouteB.js";
+import Scene6BedroomRouteA1 from "./scenes/gameLoop/scene6/routeA/scene6BedroomRouteA1.js";
+import scene6BedroomRouteA2 from "./scenes/gameLoop/scene6/routeA/scene6BedroomRouteA2.js";
+import Scene6LunchRouteA from "./scenes/gameLoop/scene6/routeA/scene6LunchRouteA.js";
+import Scene6PortalRouteA from "./scenes/gameLoop/scene6/routeA/scene6PortalRouteA.js";
+import Scene6EndingRouteA from "./scenes/gameLoop/scene6/routeA/scene6EndingRouteA.js";
+import Scene6LunchRouteB from "./scenes/gameLoop/scene6/routeB/scene6LunchRouteB.js";
+import Scene6BedroomRouteB from "./scenes/gameLoop/scene6/routeB/scene6BedroomRouteB.js";
+import Scene6PoliceStationRouteB from "./scenes/gameLoop/scene6/routeB/scene6PoliceStationRouteB.js";
+import Scene6EndingRouteB from "./scenes/gameLoop/scene6/routeB/scene6EndingRouteB.js";
 
 // Escena 7
 import Scene7Bedroom from "./scenes/gameLoop/scene7/scene7Bedroom.js";
@@ -57,9 +56,6 @@ import CreditsScene from "./scenes/menus/creditsScene.js";
 // Ordenador
 import Computer from "./computer/computer.js";
 
-// TEST
-import TrackerScene from "./tracker/trackerScene.js";
-
 const max_w = 1600, max_h = 900, min_w = 320, min_h = 240;
 const config = {
     width: max_w,
@@ -70,9 +66,6 @@ const config = {
     type: Phaser.AUTO,
     // Nota: el orden de las escenas es relevante, y las que se encuentren antes en el array se renderizaran por debajo de las siguientes
     scene: [
-        // TEST
-        // TrackerScene,
-
         // Carga de assets
         BootScene,
 

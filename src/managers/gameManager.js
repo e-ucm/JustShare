@@ -52,6 +52,9 @@ export default class GameManager {
             harasser: null
         };
 
+        this.testMode = false;
+        this.seriousgamecompletable = this.tracker.completable("JustShareGame", this.tracker.COMPLETABLETYPE.SERIOUSGAME)
+
         // Configuracion de texto por defecto
         this.textConfig = {
             fontFamily: 'Arial',        // Fuente (tiene que estar precargada en el html o el css)
@@ -109,7 +112,8 @@ export default class GameManager {
         this.computer.scene.sleep();
 
         this.TOTAL_DAYS = 7.0;
-        
+        this.testMode = true;
+
         //this.startGame(this.userInfo)
         // this.changeScene("Scene1Lunch1", {});
         //this.day=1;this.changeScene("Scene1Bedroom1", {});
@@ -117,8 +121,8 @@ export default class GameManager {
         //this.day=3;this.changeScene("Scene3Bedroom", {});
         //this.day=4;this.changeScene("Scene4Garage", {});
         //this.day=5;this.changeScene("Scene6Livingroom", {});
-        this.day=6;this.changeScene("Scene6EndingRouteA", {});
-        //this.day=7;this.changeScene("Scene7Bedroom", {});
+        //this.day=6;this.changeScene("Scene6EndingRouteA", {});
+        this.day=7;this.changeScene("Scene7Bedroom", {});
     }
 
     startTitleScene() {
@@ -656,46 +660,56 @@ export default class GameManager {
         }
     }
 
-
-    sendStartGame() {
+    async sendStartGame(flush = true) {
         this.day = 1;
         this.TOTAL_DAYS = 7.0;
 
         if (this.trackerInitialized && !this.gameCompleted) {
-            let evt = this.tracker.completable("JustShareGame", this.tracker.COMPLETABLETYPE.SERIOUSGAME).initialized();
+            let evt = this.seriousgamecompletable.initialized();
             evt.withResultExtension("Gender", this.userInfo.gender);
             evt.withResultExtension("Sexuality", this.userInfo.sexuality);
             evt.send();
-            // this.sendGameProgress();
+            if (flush) {
+                await this.tracker.flush();
+            }
         }
     }
-    sendGameProgress() {
+
+    async sendGameProgress(flush = true) {
         if (this.trackerInitialized && !this.gameCompleted) {
-            let evt = this.tracker.completable("JustShareGame", this.tracker.COMPLETABLETYPE.SERIOUSGAME).progressed(this.day / this.TOTAL_DAYS);
+            if(this.testMode && this.seriousgamecompletable.IsInitialized === false) {
+                await this.sendStartGame(false);
+            }
+            let evt = this.seriousgamecompletable.progressed(this.day / this.TOTAL_DAYS);
             evt.withProgress(this.day / this.TOTAL_DAYS);
             evt.withResultExtension("EndingDay", this.day);
             this.day++;
             evt.send();
-            this.tracker.flush();
+            if (flush) {
+                await this.tracker.flush();
+            }
         }
     }
 
-    sendEndGame() {
+    async sendEndGame() {
         if (this.trackerInitialized && !this.gameCompleted) {
+            if(this.testMode && this.seriousgamecompletable.IsInitialized === false) {
+                await this.sendStartGame(false);
+            }
             this.day=7.0;
-            this.sendGameProgress();
+            await this.sendGameProgress(false);
 
             this.gameCompleted = true;
 
             let ending = this.getValue("routeA") ? "routeA" : "routeB";
             let explained = this.getValue("explained")
 
-            let evt = this.tracker.completable("JustShareGame", this.tracker.COMPLETABLETYPE.SERIOUSGAME).completed(1, true, true);
+            let evt = this.seriousgamecompletable.completed(1, true, true);
             evt.withResultExtension("Ending", ending);
             evt.withResultExtension("Explained", explained);
             evt.send();
-            this.tracker.flush();
-            this.tracker.stop();
+            await this.tracker.flush({withBackup: true});
+            // await this.tracker.stop();
         }
     }
 
@@ -738,6 +752,9 @@ export default class GameManager {
     }
     sendDialogEnded(nodeId, dialogText) {
         if (this.trackerInitialized && !this.gameCompleted) {
+            if(this.testMode) {
+                this.sendDialogStarted(nodeId, dialogText);
+            }
             let evt = this.tracker.completable("Dialog", this.tracker.COMPLETABLETYPE.STORYNODE).completed(1, true, true);
             evt.withResultExtension("Node", this.currentScene.scene.key + "." + nodeId);
             evt.withResultExtension("Dialog", dialogText);
@@ -769,6 +786,9 @@ export default class GameManager {
     }
     sendNotificationsCleared(chat) {
         if (this.trackerInitialized && !this.gameCompleted) {
+            if(this.testMode) {
+                this.sendNotificationReceived(chat);
+            }
             let evt = this.tracker.completable(`Notification-${chat}`, this.tracker.COMPLETABLETYPE.QUEST).completed(1, true, true);
             evt.withResultExtension("Chat", chat);
             evt.send();
@@ -785,6 +805,9 @@ export default class GameManager {
     }
     sendAnsweredChat(nodeId, chat) {
         if (this.trackerInitialized && !this.gameCompleted) {
+            if(this.testMode) {
+                this.sendCanAnswerChat(nodeId, chat);
+            }
             let evt = this.tracker.completable("CanAnswerChat", this.tracker.COMPLETABLETYPE.QUEST).completed(1, true, true);
             evt.withResultExtension("Node", this.currentScene.scene.key + "." + nodeId);
             evt.withResultExtension("Chat", chat);

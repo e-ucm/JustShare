@@ -1,17 +1,17 @@
 {
     "start": {
         "root": {
-            "text": "(¿Seguirá <harasser, Pablo enfadado, Lucía endadada> conmigo...?)"
+            "text": "(¿Seguirá <harasser, Pablo enfadado, Lucía enfadada> conmigo...?)"
         }
     },
     "phone": {
         "root": [
             {
-                "text": "Estas <harasser, enfadado, endadada>?"
+                "text": "Estas <harasser, enfadado, enfadada>?"
             }
         ],
         "msg1": {
-            "text": "Hey, estas <harasser, enfadado, endadada>?"
+            "text": "Hey, estas <harasser, enfadado, enfadada>?"
         },
         "msg2": {
             "text": "Depende de ti"
